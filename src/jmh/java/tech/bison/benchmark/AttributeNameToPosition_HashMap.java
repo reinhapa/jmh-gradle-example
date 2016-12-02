@@ -12,23 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Thread)
 public class AttributeNameToPosition_HashMap {
-	List<String> keys = new ArrayList<>(1000);
-	HashMap<String, Integer> map = new HashMap<>();
+	@Param({"1", "20", "60", "100", "300", "600"})
+	int size;
+	List<String> keys;
+	HashMap<String, Integer> map;
 
 	@Setup
 	public void prepare() {
-		for (int i = 0; i < 1000; i++) {
+		keys = new ArrayList<>(size);
+		map = new HashMap<>();
+		for (int i = 0; i < size; i++) {
 			String key = Integer.toString(i);
 			keys.add(key);
 			map.put(key, Integer.valueOf(i));
@@ -41,7 +39,7 @@ public class AttributeNameToPosition_HashMap {
 	@OutputTimeUnit(TimeUnit.SECONDS)
 	public void measureThroughput(Blackhole bh) {
 		for (String key : keys) {
-			bh.consume(map.get(key).intValue());
+			bh.consume(getValue(map.get(key)));
 		}
 	}
 
@@ -50,8 +48,15 @@ public class AttributeNameToPosition_HashMap {
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void measureAvgTime(Blackhole bh) {
 		for (String key : keys) {
-			bh.consume(map.get(key).intValue());
+			bh.consume(getValue(map.get(key)));
 		}
+	}
+
+	private static int getValue(Integer value) {
+		if (value==null) {
+			return -1;
+		}
+		return value.intValue();
 	}
 
 }

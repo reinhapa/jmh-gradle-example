@@ -11,25 +11,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import gnu.trove.TObjectIntHashMap;
 
 @State(Scope.Thread)
 public class AttributeNameToPosition_Trove {
-	List<String> keys = new ArrayList<>(1000);
-	TObjectIntHashMap<String> map = new TObjectIntHashMap<>();
+	@Param({"1", "20", "60", "100", "300", "600"})
+	int size;
+	List<String> keys;
+	TObjectIntHashMap<String> map;
 
 	@Setup
 	public void prepare() {
-		for (int i = 0; i < 1000; i++) {
+		keys = new ArrayList<>(size);
+		map = new TObjectIntHashMap<>();
+		for (int i = 0; i < size; i++) {
 			String key = Integer.toString(i);
 			keys.add(key);
 			map.put(key, i);
