@@ -17,7 +17,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Thread)
 public class AttributeNameToPosition_HashMap {
-	@Param({"1", "20", "60", "100", "300", "600"})
+	@Param({"1", "20", "40", "60","80", "100", "200", "300", "350", "400", "500", "600", "700"})
 	int size;
 	List<String> keys;
 	HashMap<String, Integer> map;
@@ -53,10 +53,9 @@ public class AttributeNameToPosition_HashMap {
 	}
 
 	private static int getValue(Integer value) {
-		if (value==null) {
+		if (value == null) {
 			return -1;
 		}
 		return value.intValue();
 	}
-
 }

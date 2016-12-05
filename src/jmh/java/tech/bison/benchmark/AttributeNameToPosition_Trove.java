@@ -18,7 +18,7 @@ import gnu.trove.TObjectIntHashMap;
 
 @State(Scope.Thread)
 public class AttributeNameToPosition_Trove {
-	@Param({"1", "20", "60", "100", "300", "600"})
+	@Param({"1", "20", "40", "60","80", "100", "200", "300", "350", "400", "500", "600", "700"})
 	int size;
 	List<String> keys;
 	TObjectIntHashMap<String> map;

@@ -34,7 +34,7 @@ dependencies {
 jmh {
   jmhVersion = '1.+'
   fork = 1
-  iterations = 5
-  warmupIterations = 5
+  iterations = 10
+  warmupIterations = 10
   include = 'tech\\.bison\\.benchmark\\..*'
 }
