@@ -39,40 +39,30 @@ public class IdGeneration {
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
 	public void measureThroughput_BisonUUID(Blackhole bh) {
-		bh.consume(BisonUID.nextId());
+		bh.consume(BisonUID.fastUUID());
 	}
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	public void measureAvgTime_BisonUUID_extended(Blackhole bh) {
-		bh.consume(BisonUID.nextExtendedId());
-	}
-
-	@Benchmark
-	@BenchmarkMode(Mode.Throughput)
-	@OutputTimeUnit(TimeUnit.SECONDS)
-	public void measureThroughput_BisonUUID_extended(Blackhole bh) {
-		bh.consume(BisonUID.nextExtendedId());
-	}
-
-	@Benchmark
-	@BenchmarkMode(Mode.AverageTime)
-	@OutputTimeUnit(TimeUnit.MICROSECONDS)
-	public void measureAvgTime_BisonUUID(Blackhole bh) {
-		bh.consume(BisonUID.nextId());
+		bh.consume(BisonUID.fastUUID());
 	}
 
 	static class BisonUID {
 		private static final AtomicLong COUNTER = new AtomicLong();
 
-		public static String nextId() {
-			return Long.toString(COUNTER.incrementAndGet(), Character.MAX_RADIX);
-		}
-
-		public static String nextExtendedId() {
-			return new StringBuilder().append(Long.toString(System.nanoTime(), Character.MAX_RADIX)).append('-')
-					.append(Long.toString(COUNTER.incrementAndGet(), Character.MAX_RADIX)).toString();
+		public static UUID fastUUID() {
+			long mostSigBits = COUNTER.incrementAndGet();
+			mostSigBits = mostSigBits << 16;
+			// set version to random (4)
+			mostSigBits |= 0x4000;
+			// set variant to Leach-Salz (2)
+			long leastSigBits = 0x1;
+			leastSigBits = leastSigBits << 63;
+			// add counter
+			leastSigBits |= System.nanoTime();
+			return new UUID(mostSigBits, leastSigBits);
 		}
 	}
 }
