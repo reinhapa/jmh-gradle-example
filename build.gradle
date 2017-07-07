@@ -36,5 +36,5 @@ jmh {
   fork = 1
   iterations = 10
   warmupIterations = 10
-  include = 'tech\\.bison\\.benchmark\\..*'
+  include = 'tech\\.bison\\.benchmark\\.IdGeneration.*'
 }
